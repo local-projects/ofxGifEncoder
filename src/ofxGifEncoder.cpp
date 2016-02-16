@@ -36,8 +36,8 @@ ofxGifEncoder::~ofxGifEncoder() {}
 
 
 //--------------------------------------------------------------
-ofxGifFrame * ofxGifEncoder::createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel, float _duration ) {
-    ofxGifFrame * gf    = new ofxGifFrame();
+ofxGifEncoderFrame * ofxGifEncoder::createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel, float _duration ) {
+    ofxGifEncoderFrame * gf    = new ofxGifEncoderFrame();
     gf->pixels          = px;
     gf->width           = _w; 
     gf->height          = _h;
@@ -78,7 +78,7 @@ void ofxGifEncoder::addFrame(unsigned char *px, int _w, int _h, int _bitsPerPixe
     
     unsigned char * temp = new unsigned char[w * h * nChannels];
     memcpy(temp, px, w * h * nChannels);
-    ofxGifFrame * gifFrame   = ofxGifEncoder::createGifFrame(temp, w, h, _bitsPerPixel, tempDuration) ;
+    ofxGifEncoderFrame * gifFrame   = ofxGifEncoder::createGifFrame(temp, w, h, _bitsPerPixel, tempDuration) ;
     frames.push_back(gifFrame);
 }
 
@@ -136,7 +136,7 @@ void ofxGifEncoder::doSave() {
 	// create a multipage bitmap
 	FIMULTIBITMAP *multi = FreeImage_OpenMultiBitmap(FIF_GIF, ofToDataPath(fileName).c_str(), TRUE, FALSE);
 	for(int i = 0; i < frames.size(); i++ ) {
-        ofxGifFrame * currentFrame = frames[i];
+        ofxGifEncoderFrame * currentFrame = frames[i];
         processFrame(currentFrame, multi);
     }
 	FreeImage_CloseMultiBitmap(multi); 
@@ -171,7 +171,7 @@ int ofxGifEncoder::getClosestToGreenScreenPaletteColorIndex(){
     
 }
 
-void ofxGifEncoder::processFrame(ofxGifFrame * frame, FIMULTIBITMAP *multi){
+void ofxGifEncoder::processFrame(ofxGifEncoderFrame * frame, FIMULTIBITMAP *multi){
     FIBITMAP * bmp = NULL;
     // we need to swap the channels if we're on little endian (see ofImage::swapRgb);
 
@@ -252,7 +252,7 @@ void ofxGifEncoder::processFrame(ofxGifFrame * frame, FIMULTIBITMAP *multi){
 
 }
 
-ofxGifFrame * ofxGifEncoder::convertTo24BitsWithGreenScreen(ofxGifFrame * frame){
+ofxGifEncoderFrame * ofxGifEncoder::convertTo24BitsWithGreenScreen(ofxGifEncoderFrame * frame){
     ofColor otherColor(0,255,0);
 
     int width = frame->width;
@@ -285,14 +285,14 @@ ofxGifFrame * ofxGifEncoder::convertTo24BitsWithGreenScreen(ofxGifFrame * frame)
        
     }
 
-    ofxGifFrame * newFrame = ofxGifEncoder::createGifFrame(newPixels, width, height, 24, frame->duration);
+    ofxGifEncoderFrame * newFrame = ofxGifEncoder::createGifFrame(newPixels, width, height, 24, frame->duration);
     return newFrame;
 }
 
  
 // from ofimage
 //----------------------------------------------------
-void ofxGifEncoder::swapRgb(ofxGifFrame * pix){
+void ofxGifEncoder::swapRgb(ofxGifEncoderFrame * pix){
 	if (pix->bitsPerPixel != 8){
 		int sizePixels		= pix->width * pix->height;
 		int cnt				= 0;

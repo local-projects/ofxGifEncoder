@@ -14,6 +14,6 @@ typedef struct {
     int height;
     float duration;  // seconds
 	int bitsPerPixel;
-} ofxGifFrame;
+} ofxGifEncoderFrame;
 
 

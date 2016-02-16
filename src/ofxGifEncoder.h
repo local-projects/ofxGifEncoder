@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 #include "FreeImage.h"
-#include "ofxGifFrame.h"
+#include "ofxGifEncoderFrame.h"
 #include "ofxGifDitherTypes.h"
 
 #pragma once
@@ -39,7 +39,7 @@ class ofxGifEncoder: public ofThread {
         void addFrame(ofImage & image, float duration = 0.f);        
         void addFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.f);
 
-        static ofxGifFrame * createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.1f);
+        static ofxGifEncoderFrame * createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.1f);
         void save(string _fileName = "test.gif" );
 		void saveBlocking(const string& filename = "test.gif");
 	
@@ -48,14 +48,14 @@ class ofxGifEncoder: public ofThread {
         int getClosestToGreenScreenPaletteColorIndex();
         ofColor greenScreenColor;
         vector <ofColor> palette;
-        ofxGifFrame * convertTo24BitsWithGreenScreen(ofxGifFrame * frame);
-        void processFrame(ofxGifFrame * frame, FIMULTIBITMAP * multi);
-        void swapRgb(ofxGifFrame * pix);
+        ofxGifEncoderFrame * convertTo24BitsWithGreenScreen(ofxGifEncoderFrame * frame);
+        void processFrame(ofxGifEncoderFrame * frame, FIMULTIBITMAP * multi);
+        void swapRgb(ofxGifEncoderFrame * pix);
         void threadedFunction();
         void doSave();
         bool bSaving;
 
-        vector <ofxGifFrame *> frames;
+        vector <ofxGifEncoderFrame *> frames;
         string  fileName;
         int     nColors;
         float   frameDuration;
