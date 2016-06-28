@@ -8,6 +8,8 @@
 // http://github.com/NickHardeman/ofxGifEncoder/tree/threaded
 // Thanks!
 
+
+
 #include "ofMain.h"
 #include "FreeImage.h"
 #include "ofxGifFrame.h"
@@ -16,15 +18,7 @@
 #pragma once
 
 class ofxGifEncoder: public ofThread {
-    public:
-    
-        typedef struct {
-            unsigned char * pixels;
-            int width;
-            int height;
-            float duration;  // seconds
-            int bitsPerPixel;
-        } ofxGifFrame;
+    public:     
         
         ofxGifEncoder();
         ~ofxGifEncoder();
@@ -38,14 +32,14 @@ class ofxGifEncoder: public ofThread {
 
         // thread saving
         // blocking, verbose
-        void start() {startThread(true, false);}
+        void start() {startThread(true);}
         void stop() {stopThread();}
         void exit();
 		void reset();
         
         // if no duration is specified, we'll use default (from setup())
         void addFrame(ofImage & image, float duration = 0.f);        
-        void addFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.f);
+        void addFrame( ofPixels  * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.f);
 
         static ofxGifFrame * createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel = 24, float duration = 0.1f);
         void save(string _fileName = "test.gif" );

@@ -36,7 +36,7 @@ ofxGifEncoder::~ofxGifEncoder() {}
 
 
 //--------------------------------------------------------------
-ofxGifEncoder::ofxGifFrame * ofxGifEncoder::createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel, float _duration ) {
+ofxGifFrame * ofxGifEncoder::createGifFrame(unsigned char * px, int _w, int _h, int _bitsPerPixel, float _duration ) {
     ofxGifFrame * gf    = new ofxGifFrame();
     gf->pixels          = px;
     gf->width           = _w; 
@@ -53,10 +53,10 @@ void ofxGifEncoder::addFrame(ofImage & img, float _duration) {
         return;
     }
     
-    addFrame(img.getPixels(), w, h, img.getPixels().getBitsPerPixel(),  _duration);
+    addFrame(&img.getPixels(), w, h, img.getPixels().getBitsPerPixel(),  _duration);
 }
 
-void ofxGifEncoder::addFrame(unsigned char *px, int _w, int _h, int _bitsPerPixel, float _duration) {
+void ofxGifEncoder::addFrame( ofPixels *px, int _w, int _h, int _bitsPerPixel, float _duration) {
     if(_w != w || _h != h) {
         ofLog(OF_LOG_WARNING, "ofxGifEncoder::addFrame image dimensions don't match, skipping frame");
         return;
@@ -77,7 +77,8 @@ void ofxGifEncoder::addFrame(unsigned char *px, int _w, int _h, int _bitsPerPixe
     }
     
     unsigned char * temp = new unsigned char[w * h * nChannels];
-    memcpy(temp, px, w * h * nChannels);
+    unsigned char * pix = *px;
+    memcpy(temp, pix, w * h * nChannels);
     ofxGifFrame * gifFrame   = ofxGifEncoder::createGifFrame(temp, w, h, _bitsPerPixel, tempDuration) ;
     frames.push_back(gifFrame);
 }
@@ -247,7 +248,7 @@ void ofxGifEncoder::processFrame(ofxGifFrame * frame, FIMULTIBITMAP *multi){
 
 }
 
-ofxGifEncoder::ofxGifFrame * ofxGifEncoder::convertTo24BitsWithGreenScreen(ofxGifFrame * frame){
+ofxGifFrame * ofxGifEncoder::convertTo24BitsWithGreenScreen(ofxGifFrame * frame){
     ofColor otherColor(0,255,0);
 
     int width = frame->width;
